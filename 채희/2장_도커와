@@ -1,0 +1,99 @@
+# 2장 - 도커와 쿠버네티스 첫걸음
+
+# 2.2 쿠버네티스 클러스터 설치
+
+## 2.2.1 Minikube를 활용한 단일 노드 쿠버네티스 클러스터 실행하기
+
+### Minikube 설치
+
+[minikube 설치 docs](https://minikube.sigs.k8s.io/docs/start/)
+
+```bash
+$ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+$ sudo install minikube-linux-amd64 /usr/local/bin/minikube
+$ rm minikube-linux-amd64
+$ minikube 
+minikube provisions and manages local Kubernetes clusters optimized for development workflows.
+
+Basic Commands:
+  start            Starts a local Kubernetes cluster
+  status           Gets the status of a local Kubernetes cluster
+  stop             Stops a running local Kubernetes cluster
+  delete           Deletes a local Kubernetes cluster
+  dashboard        Access the Kubernetes dashboard running within the minikube cluster
+  pause            pause Kubernetes
+  unpause          unpause Kubernetes
+
+Images Commands:
+  docker-env       Provides instructions to point your terminal's docker-cli to the Docker Engine inside minikube.
+(Useful for building docker images directly inside minikube)
+  podman-env       Configure environment to use minikube's Podman service
+  cache            Manage cache for images
+  image            Manage images
+. . . 
+```
+
+### Minikube로 쿠버네티스 클러스터 시작하기
+
+```bash
+$ minikube start
+```
+
+### 쿠버네티스 클라이언트 설치하기
+
+[kubectl 설치 docs](https://kubernetes.io/ko/docs/tasks/tools/install-kubectl-linux/)
+
+```bash
+# 최신 릴리즈 다운로드
+$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+# 바이너리 검증(선택)
+$ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+$ echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+kubectl: OK -> 요렇게 출력되면 검증 성공
+
+# kubectl 설치
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# 깔끔하게 지워주기
+$ rm kubectl*
+```
+
+## 2.2.2 - 2.2.3
+
+### 오프젝트 세부 정보 가져오기
+
+```bash
+kubectl describe node <node명>
+```
+
+위를 통해 오브젝트에 대한 세부 정보를 확인할 수 있다.
+
+- 여기서 잠깐! kubectl alias 설정 및 자동완성 설정하기
+    - 책에서는 .bashrc에 추가하라고 했지만 기본 파일과 다르게 하기 위해서 `.bash_aliases` 에 추가해줄것
+    
+    [참고](https://inpa.tistory.com/entry/LINUX-%F0%9F%93%9A-Alias-%EC%84%A4%EC%A0%95-%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95-%EC%A0%95%EB%A6%AC-%EB%8B%A8%EC%B6%95%EC%96%B4-%EC%98%88%EC%8B%9CTIP)
+    
+    ```bash
+    alias k='kubectl'
+    ```
+    
+    ```bash
+    # bash-completion 설치
+    sudo apt install bash-completion
+    source <(kubectl completion bash) 
+    
+    ```
+    
+
+# 2.3 쿠버네티스에 첫 번째 애플리케이션 실행하기
+
+- 파드 조회하기
+    - `kubectl get pods`
+    - 파드 IP도 알고 싶다면?
+        - `kubectl get pods -o wide`
+    - 파드 세부 정보 살펴보기
+        - `kubectl describe pod <pod명>`
+- 서비스 조회하기
+    - `kubectl get services`
+    - `kubectl get svc`
